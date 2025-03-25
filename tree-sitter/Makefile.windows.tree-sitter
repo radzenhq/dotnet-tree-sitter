@@ -1,0 +1,33 @@
+CFLAGS=/nologo /FC /Gy /diagnostics:column /Ilib/include
+#LFLAGS=/def:$(@B).def /incremental:no
+LFLAGS=/incremental:no
+
+all: tree-sitter.dll
+
+tree-sitter.obj: \
+		lib/src/alloc.c \
+		lib/src/get_changed_ranges.c \
+		lib/src/language.c \
+		lib/src/lexer.c \
+		lib/src/lib.c \
+		lib/src/node.c \
+		lib/src/parser.c \
+		lib/src/query.c \
+		lib/src/stack.c \
+		lib/src/subtree.c \
+		lib/src/tree.c \
+		lib/src/tree_cursor.c
+	cl $(CFLAGS) /Fo:$@ \
+		/Ilib/src /Ilib/src/unicode \
+		/c lib/src/lib.c
+
+tree-sitter.dll: tree-sitter.obj
+	cl /LD $(CFLAGS) /Fe:$@ $** /link $(LFLAGS)
+
+clean:
+	-del *.obj 2>nul
+	-del tree-sitter*.dll tree-sitter*.exp tree-sitter*.lib tree-sitter*.pdb 2>nul
+	-del *~ 2>nul
+	@-echo.
+	@-echo.
+

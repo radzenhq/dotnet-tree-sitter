@@ -1,0 +1,84 @@
+name: tree-sitter
+
+on: [push]
+
+jobs:
+   build-linux-x64:
+     runs-on: ubuntu-24.04
+     steps:
+     - uses: actions/checkout@v2
+       with:
+         submodules: true
+
+     - name: Build linux x64
+       run: tree-sitter/make-linux.sh
+
+     - name: Upload
+       uses: actions/upload-artifact@master
+       with:
+         name: native-linux-x64
+         path: tree-sitter/out
+
+   build-linux-arm64:
+     runs-on: ubuntu-24.04-arm
+     steps:
+     - uses: actions/checkout@v2
+       with:
+         submodules: true
+
+     - name: Build linux arm64
+       run: tree-sitter/make-linux.sh
+
+     - name: Upload
+       uses: actions/upload-artifact@master
+       with:
+         name: native-linux-arm64
+         path: tree-sitter/out
+
+   build-macos-arm64:
+     runs-on: macos-14
+     steps:
+     - uses: actions/checkout@v2
+       with:
+         submodules: true
+
+     - name: Build macos arm64
+       run: tree-sitter/make-macos.sh
+
+     - name: Upload
+       uses: actions/upload-artifact@master
+       with:
+         name: native-macos-arm64
+         path: tree-sitter/out
+
+   build-macos-intel:
+     runs-on: macos-13
+     steps:
+     - uses: actions/checkout@v2
+       with:
+         submodules: true
+
+     - name: Build macos intel
+       run: tree-sitter/make-macos.sh
+
+     - name: Upload
+       uses: actions/upload-artifact@master
+       with:
+         name: native-macos-intel
+         path: tree-sitter/out
+
+   build-windows-x64:
+     runs-on: windows-2022
+     steps:
+     - uses: actions/checkout@v2
+       with:
+         submodules: true
+
+     - name: Build windows x64
+       run: tree-sitter/make-windows.bat
+
+     - name: Upload
+       uses: actions/upload-artifact@master
+       with:
+         name: native-windows-x64
+         path: tree-sitter/out

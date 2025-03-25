@@ -1,0 +1,22 @@
+CFLAGS=/nologo /FC /Gy /diagnostics:column /Ilib/include
+#LFLAGS=/def:$(@B).def /incremental:no
+LFLAGS=/incremental:no
+
+all: tree-sitter-$(GRAMMAR).dll
+
+parser.obj: src/parser.c
+        cl $(CFLAGS) /Fo:$@ /Isrc /c $**
+
+scanner.obj: src/scanner.c
+        cl $(CFLAGS) /Fo:$@ /Isrc /c $**
+
+tree-sitter-$(GRAMMAR).dll: parser.obj scanner.obj
+        cl /LD $(CFLAGS) /Fe:$@ $** /link $(LFLAGS)
+
+clean:
+	-del *.obj 2>nul
+	-del tree-sitter*.dll tree-sitter*.exp tree-sitter*.lib tree-sitter*.pdb 2>nul
+	-del *~ 2>nul
+	@-echo.
+	@-echo.
+
