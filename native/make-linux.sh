@@ -4,7 +4,9 @@ set -e
 
 echo Making on LINUX
 
-cd tree-sitter/tree-sitter
+cd `dirname "$0"`
+
+cd tree-sitter
 make libtree-sitter.so
 
 cd ..

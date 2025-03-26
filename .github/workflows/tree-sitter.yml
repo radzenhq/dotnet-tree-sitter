@@ -11,13 +11,13 @@ jobs:
          submodules: true
 
      - name: Build linux x64
-       run: tree-sitter/make-linux.sh
+       run: native/make-linux.sh
 
      - name: Upload
        uses: actions/upload-artifact@master
        with:
          name: native-linux-x64
-         path: tree-sitter/out
+         path: native/out
 
    build-linux-arm64:
      runs-on: ubuntu-24.04-arm
@@ -27,13 +27,13 @@ jobs:
          submodules: true
 
      - name: Build linux arm64
-       run: tree-sitter/make-linux.sh
+       run: native/make-linux.sh
 
      - name: Upload
        uses: actions/upload-artifact@master
        with:
          name: native-linux-arm64
-         path: tree-sitter/out
+         path: native/out
 
    build-macos-arm64:
      runs-on: macos-14
@@ -43,13 +43,13 @@ jobs:
          submodules: true
 
      - name: Build macos arm64
-       run: tree-sitter/make-macos.sh
+       run: native/make-macos.sh
 
      - name: Upload
        uses: actions/upload-artifact@master
        with:
          name: native-macos-arm64
-         path: tree-sitter/out
+         path: native/out
 
    build-macos-intel:
      runs-on: macos-13
@@ -59,13 +59,13 @@ jobs:
          submodules: true
 
      - name: Build macos intel
-       run: tree-sitter/make-macos.sh
+       run: native/make-macos.sh
 
      - name: Upload
        uses: actions/upload-artifact@master
        with:
          name: native-macos-intel
-         path: tree-sitter/out
+         path: native/out
 
    build-windows-x64:
      runs-on: windows-2022
@@ -75,10 +75,10 @@ jobs:
          submodules: true
 
      - name: Build windows x64
-       run: tree-sitter/make-windows.bat
+       run: native/make-windows.bat
 
      - name: Upload
        uses: actions/upload-artifact@master
        with:
          name: native-windows-x64
-         path: tree-sitter/out
+         path: native/out

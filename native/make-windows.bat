@@ -1,9 +1,12 @@
 @echo on & setlocal EnableDelayedExpansion
 
 echo Making on WINDOWS
+
+cd "%~dp0"
+
 call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat"
 
-cd tree-sitter/tree-sitter
+cd tree-sitter
 
 del Makefile
 copy ..\Makefile.windows.tree-sitter Makefile
