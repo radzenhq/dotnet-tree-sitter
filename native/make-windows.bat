@@ -1,8 +1,10 @@
-@echo on & setlocal EnableDelayedExpansion
+@echo off & setlocal EnableDelayedExpansion
 
 echo Making on WINDOWS
 
 cd "%~dp0"
+
+set "outdir=out/%1"
 
 call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat"
 
@@ -16,7 +18,8 @@ nmake tree-sitter.dll
 cd ..
 
 mkdir out
-copy tree-sitter\tree-sitter.dll out\
+mkdir "!outdir!"
+copy tree-sitter\tree-sitter.dll "!outdir!\"
 
 for /d %%d in (tree-sitter-*) do (
     set "grammar=%%d"
@@ -37,5 +40,5 @@ for /d %%d in (tree-sitter-*) do (
     )
 
     cd ..
-    copy tree-sitter-!grammar!\tree-sitter-!grammar!.dll out\
+    copy "tree-sitter-!grammar!\tree-sitter-!grammar!.dll" "!outdir!\"
 )

@@ -3,82 +3,132 @@ name: tree-sitter
 on: [push]
 
 jobs:
-   build-linux-x64:
-     runs-on: ubuntu-24.04
-     steps:
-     - uses: actions/checkout@v2
-       with:
-         submodules: true
+  build-native-linux-x64:
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
 
-     - name: Build linux x64
-       run: native/make-linux.sh
+    - name: Build linux x64
+      run: native/make-linux.sh linux-x64
 
-     - name: Upload
-       uses: actions/upload-artifact@master
-       with:
-         name: native-linux-x64
-         path: native/out
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: native-linux-x64
+        path: native/out
 
-   build-linux-arm64:
-     runs-on: ubuntu-24.04-arm
-     steps:
-     - uses: actions/checkout@v2
-       with:
-         submodules: true
+  build-native-linux-arm64:
+    runs-on: ubuntu-24.04-arm
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
 
-     - name: Build linux arm64
-       run: native/make-linux.sh
+    - name: Build linux arm64
+      run: native/make-linux.sh linux-arm64
 
-     - name: Upload
-       uses: actions/upload-artifact@master
-       with:
-         name: native-linux-arm64
-         path: native/out
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: native-linux-arm64
+        path: native/out
 
-   build-macos-arm64:
-     runs-on: macos-14
-     steps:
-     - uses: actions/checkout@v2
-       with:
-         submodules: true
+  build-native-macos-arm64:
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
 
-     - name: Build macos arm64
-       run: native/make-macos.sh
+    - name: Build macos arm64
+      run: native/make-macos.sh osx-arm64
 
-     - name: Upload
-       uses: actions/upload-artifact@master
-       with:
-         name: native-macos-arm64
-         path: native/out
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: native-macos-arm64
+        path: native/out
 
-   build-macos-intel:
-     runs-on: macos-13
-     steps:
-     - uses: actions/checkout@v2
-       with:
-         submodules: true
+  build-native-macos-intel:
+    runs-on: macos-13
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
 
-     - name: Build macos intel
-       run: native/make-macos.sh
+    - name: Build macos intel
+      run: native/make-macos.sh osx-x64
 
-     - name: Upload
-       uses: actions/upload-artifact@master
-       with:
-         name: native-macos-intel
-         path: native/out
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: native-macos-intel
+        path: native/out
 
-   build-windows-x64:
-     runs-on: windows-2022
-     steps:
-     - uses: actions/checkout@v2
-       with:
-         submodules: true
+  build-native-windows-x64:
+    runs-on: windows-2022
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
 
-     - name: Build windows x64
-       run: native/make-windows.bat
+    - name: Build windows x64
+      run: native/make-windows.bat win-x64
 
-     - name: Upload
-       uses: actions/upload-artifact@master
-       with:
-         name: native-windows-x64
-         path: native/out
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: native-windows-x64
+        path: native/out
+
+  build-core-binding:
+    runs-on: ubuntu-latest
+    needs: [build-native-linux-x64, build-native-linux-arm64, build-native-macos-arm64, build-native-macos-intel, build-native-windows-x64]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.x'
+
+    - uses: actions/download-artifact@v4
+      with:
+          name: native-linux-x64
+          path: dotnet/native
+    - uses: actions/download-artifact@v4
+      with:
+          name: native-linux-arm64
+          path: dotnet/native
+    - uses: actions/download-artifact@v4
+      with:
+          name: native-macos-arm64
+          path: dotnet/native
+    - uses: actions/download-artifact@v4
+      with:
+          name: native-macos-intel
+          path: dotnet/native
+    - uses: actions/download-artifact@v4
+      with:
+          name: native-windows-x64
+          path: dotnet/native
+
+    - name: Build core binding
+      run: dotnet/make-tree-sitter-core.sh ${{ github.run_number }}
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: 1.0.${{ github.run_number }}
+        release_name: Release 1.0.${{ github.run_number }}
+        draft: true
+        prerelease: true
+
+    - name: Upload nupkg
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: dotnet/upload-packages-to-release.sh "${{ steps.create_release.outputs.upload_url }}"

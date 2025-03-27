@@ -6,13 +6,15 @@ echo Making on LINUX
 
 cd `dirname "$0"`
 
+outdir="out/$1"
+
 cd tree-sitter
 make libtree-sitter.so
 
 cd ..
 
-mkdir out
-cp tree-sitter/libtree-sitter.so out/
+mkdir -p "$outdir"
+cp tree-sitter/libtree-sitter.so "$outdir/"
 
 for grammar in `ls -d tree-sitter-*/ -1 | sed 's|tree-sitter-||' | sed s'|/||'`
 do
@@ -30,5 +32,5 @@ do
     fi
 
     cd ..
-    cp tree-sitter-$grammar/libtree-sitter-$grammar.so out/
+    cp tree-sitter-$grammar/libtree-sitter-$grammar.so "$outdir/"
 done
