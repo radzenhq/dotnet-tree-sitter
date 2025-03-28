@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 cd `dirname $0`
 
 url=`echo "$1" | sed -re 's|assets.*$|assets|'`

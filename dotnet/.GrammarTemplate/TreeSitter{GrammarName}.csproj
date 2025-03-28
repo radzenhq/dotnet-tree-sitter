@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <LangVersion>default</LangVersion>
+        <TargetFramework>net8.0</TargetFramework>
+        <RootNamespace>TreeSitter</RootNamespace>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <PackageId>TreeSitter.NET.{GrammarName}</PackageId>
+        <PackageVersion>1.0$(VERSION_POSTFIX)</PackageVersion>
+        <Title>Tree sitter .NET {GrammarName}</Title>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TreeSitter\TreeSitter.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="native/linux-x64/libtree-sitter-{grammar-name}.so" Pack="true" PackagePath="runtimes/linux-x64/native/" >
+            <TargetPath>%(Filename)%(Extension)</TargetPath>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Include="native/linux-arm64/libtree-sitter-{grammar-name}.so" Pack="true" PackagePath="runtimes/linux-arm64/native/" >
+            <TargetPath>%(Filename)%(Extension)</TargetPath>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Include="native/osx-arm64/libtree-sitter-{grammar-name}.dylib" Pack="true" PackagePath="runtimes/osx-arm64/native/" >
+            <TargetPath>%(Filename)%(Extension)</TargetPath>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Include="native/osx-x64/libtree-sitter-{grammar-name}.dylib" Pack="true" PackagePath="runtimes/osx-x64/native/" >
+            <TargetPath>%(Filename)%(Extension)</TargetPath>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Include="native/win-x64/tree-sitter-{grammar-name}.dll" Pack="true" PackagePath="runtimes/win-x64/native/" >
+            <TargetPath>%(Filename)%(Extension)</TargetPath>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>
